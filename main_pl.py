@@ -13,17 +13,18 @@ import os
 from pathlib import Path
 
 z=Path()
+z=z.resolve()
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
 def findtxt(word):
 
-    st="wordlists"
-    for i in os.listdir("./"+st):
-        tempvar=Path(str(z.resolve())+"/wordlists").joinpath(str(i))
+    v=Path(str(z)).joinpath("wordlists")
+    for i in v.iterdir():
+        tempvar=Path(str(v.resolve())).joinpath(str(i))
         #print(tempvar)
         q=Path(tempvar)
-        r=Path(str(z.resolve())+"/lis.txt")
+        r=Path(str(z)).joinpath("lis.txt")
         t=r.open("a")
         with q.open("r", encoding="ascii", errors='ignore') as u:
             worl=u.readlines()
@@ -31,7 +32,8 @@ def findtxt(word):
         if word in worl:
             print(str(word)+" found")
             t.write(word+': ')
-            t.write(i[3:i.index('_wordlist')])
+            t.write(str(i)[len(str(v))+1:str(i).index('_wordlist')])
+            t.write("\n")
             return
     else:
         print(str(word)+ " not found")
@@ -44,7 +46,7 @@ def wrdlist(x):
     response=requests.get(url,headers=headers)
     soup=BeautifulSoup(response.text,'lxml')
 
-    g=Path(str(z.resolve())+"/IDs/ID:%s.txt" % x)
+    g=Path(str(z)).joinpath("IDs",("ID_%s.txt" % x))
     f=g.open("w+")
     f.write(soup.get_text())
     f.close()
@@ -66,7 +68,7 @@ def wrdlist(x):
             i=i.replace("!","")
             m.append(i)
         
-        n=Path(str(z.resolve())+"/wordlists/ID:%s_wordlist.txt" % x)
+        n=Path(str(z)+"/wordlists/ID:%s_wordlist.txt" % x)
         f=n.open("w+")
         for i in m:
             f.write(i)
@@ -74,24 +76,28 @@ def wrdlist(x):
         f.close()
 
 g=int(input("How many videos do you want to convert to word lists?: "))
-j=Path(str(z.resolve())+"/pewds.txt")
-d=Path(str(z.resolve())+"/lis.txt")
+j=Path(str(z)).joinpath("pewds.txt")
+d=Path(str(z)).joinpath("lis.txt")
 f=j.open("r")
 c=0
 t=d.open("w")
 t.close()
-if not os.path.exists('./wordlists'):
-    os.mkdir('./wordlists')
+if not Path.exists(Path(str(z)).joinpath("wordlists")):
+    y=Path(str(z)).joinpath("wordlists")
+    y.mkdir()
+    #"wordlists/"
 else:
     pass
-if not os.path.exists('./IDs'):
-    os.mkdir('./IDs')
+if not Path.exists(Path(str(z)).joinpath("IDs")):
+    x=Path(str(z)).joinpath("IDs")
+    x.mkdir()
+    #'/IDs'
 else:
     pass
 
 while (c!=g):
     temp_=f.readline()
-    wrdlist(temp_)
+    wrdlist(temp_.rstrip())
     c+=1
     cls()
     print(str(c)+" of " + str(g) +" videos converted into word lists.")
