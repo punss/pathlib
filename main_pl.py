@@ -10,7 +10,6 @@ for (url in urls) {
 from bs4 import BeautifulSoup
 import requests
 import os
-import glob
 from pathlib import Path
 
 z=Path()
