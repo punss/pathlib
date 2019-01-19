@@ -14,6 +14,7 @@ from pathlib import Path
 z = Path()
 z = z.resolve()
 Z_STRING = str(z)
+g = Path(Z_STRING)
 
 
 def cls():
@@ -22,11 +23,11 @@ def cls():
 
 def find_text(word):
 
-    v = Path(Z_STRING).joinpath("wordlists")
+    v = g / "wordlists"
     for i in v.iterdir():
-        path_of_file = Path(str(v.resolve())).joinpath(str(i))
+        path_of_file = v / (str(i))
         q = Path(path_of_file)
-        r = Path(Z_STRING).joinpath("lis.txt")
+        r = g / "lis.txt"
         t = r.open("a")
         with q.open("r", encoding="ascii", errors='ignore') as u:
             WORD_LIST = u.readlines()
@@ -53,13 +54,13 @@ def word_list(x):
     response = requests.get(url, headers=HEADERS)
     soup = BeautifulSoup(response.text, 'lxml')
 
-    g = Path(Z_STRING).joinpath("IDs", ("ID_%s.txt" % x))
-    f = g.open("w+")
-    f.write(soup.get_text())
-    f.close()
+    g1 = g / "IDs" / ("ID_%s.txt" % x)
+    with g1.open("w+") as f:
+        f.write(soup.get_text())
+        f.close()
     l = []
     m = []
-    with g.open("r") as f:
+    with g1.open("r") as f:
         for words in f:
             for word in words.split():
                 if word.lower() not in l:
@@ -74,31 +75,33 @@ def word_list(x):
             i = i.replace("?", "")
             i = i.replace("!", "")
             m.append(i)
-        n = Path(Z_STRING+"/wordlists/ID:%s_wordlist.txt" % x)
-        f = n.open("w+")
-        for i in m:
-            f.write(i)
-            f.write("\n")
-        f.close()
+        n = g / "wordlists" / ("ID:%s_wordlist.txt" % x)
+        with n.open("w+") as f:
+            for i in m:
+                f.write(i)
+                f.write("\n")
+            f.close()
 
 
 NUM_OF_VID = int(input(
     "How many videos do you want to convert to word lists?: "
     ))
-j = Path(Z_STRING).joinpath("pewds.txt")
-d = Path(Z_STRING).joinpath("lis.txt")
+j = g / "pewds.txt"
+d = g / "lis.txt"
 f = j.open("r")
 COUNT = 0
-t = d.open("w")
-t.close()
-if not Path.exists(Path(Z_STRING).joinpath("wordlists")):
-    y = Path(Z_STRING).joinpath("wordlists")
+with d.open("w") as t:
+    t.close()
+if not Path.exists(g / "wordlists"):
+    y = g / "wordlists"
     y.mkdir()
+    # "wordlists/"
 else:
     pass
-if not Path.exists(Path(Z_STRING).joinpath("IDs")):
-    x = Path(Z_STRING).joinpath("IDs")
+if not Path.exists(g / "IDs"):
+    x = g / "IDs"
     x.mkdir()
+    # '/IDs'
 else:
     pass
 
