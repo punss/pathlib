@@ -12,9 +12,10 @@ import os
 from pathlib import Path
 
 z = Path()
-z = z.resolve()
+"""z = z.resolve()
 Z_STRING = str(z)
-g = Path(Z_STRING)
+g = Path(Z_STRING)"""
+g = Path(str(z.resolve))
 
 
 def cls():
