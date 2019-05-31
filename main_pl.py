@@ -19,7 +19,7 @@ g = Path(str(z.resolve))
 
 
 def cls():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system('clear')
 
 
 def find_text(word):
